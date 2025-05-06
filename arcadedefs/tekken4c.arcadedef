@@ -1,0 +1,17 @@
+{
+    "id": "tekken4c",
+    "name": "Tekken 4c",
+    "driver": "sys246",
+    "dongle":
+    {
+        "name": "tef1verc.ic002"
+    },
+    "cdvd":
+    {
+        "name": "tef1dvd0.chd"
+    },
+    "boot": "ac0:TK4LOAD",
+    "patches":
+    [
+    ]
+}

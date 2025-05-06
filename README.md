@@ -147,6 +147,51 @@ You can now build the project by opening the generated Visual Studio Solution or
  ```
 Note: `--config` can be `Release`, `Debug`, or `RelWithDebInfo`.
 
+### Building for Windows with Visual Studio 2022  ###
+- After `git clone` run this command to get all dependencies: `git submodule update --init --recursive`
+- Install NuGetPackages in the deps folder. Get it from here [boost.1.60.0](https://sourceforge.net/projects/boost/files/boost/1.60.0/) and name it exactly like this: `boost.1.60.0.0`
+- Install Qt for MSVC 2022 (64-bit). Download the Qt Online Installer from the official site: [Qt](https://www.qt.io/download-qt-installer)
+- Create a Qt account (free). Run the Installer and log in when prompted. During Component Selection: Go to Qt → Qt 6.x (e.g., 6.9.x or 6.6.x LTS). Select "MSVC 2022 64-bit" under that version.
+- Install VCPKG:
+```cmd
+git clone https://github.com/microsoft/vcpkg
+cd vcpkg
+bootstrap-vcpkg.bat
+
+# Install dependencies
+vcpkg install glew zlib openssl bzip2 icu vulkan sqlite3
+
+# Integrate with VS
+vcpkg integrate install
+```
+
+- Before building search for this line in the code:              
+`ui->current_time->setText(QDateTime::fromTime_t(m_playbackController.GetFrameCount() / 60).toUTC().toString("mm:ss"));`                    
+and change it to:                   
+`ui->current_time->setText(QDateTime::fromSecsSinceEpoch(m_playbackController.GetFrameCount() / 60).toUTC().toString("mm:ss"));`            
+
+- Run this script one time: `./01-start-new.bat`
+- Run this powershell script: `./02-build.ps1`       
+- In the 'Build' menu select 'Install Play' to start the build process.
+
+**Optional:**
+Add these to your systems environment variables:
+```
+-DZLIB_LIBRARY="C:\repos\vcpkg\installed\x64-windows\lib\zlib.lib"
+-DZLIB_INCLUDE_DIR="C:\repos\vcpkg\installed\x64-windows\include"
+-DICUUC_INCLUDE_DIR="C:\repos\vcpkg\installed\x64-windows\include"
+-DBZIP2_LIBRARIES="C:\repos\vcpkg\installed\x64-windows\lib\bz2.lib"
+-DBZIP2_INCLUDE_DIR="C:\repos\vcpkg\installed\x64-windows\include"
+-DGLEW_LIBRARY="C:\repos\vcpkg\installed\x64-windows\lib\glew32.lib"
+-DGLEW_INCLUDE_DIR="C:\repos\vcpkg\installed\x64-windows\include"
+-DSQLite3_LIBRARY="C:\repos\vcpkg\installed\x64-windows\lib\sqlite3.lib"
+-DSQLite3_INCLUDE_DIR="C:\repos\vcpkg\installed\x64-windows\include"
+-DPKG_CONFIG_EXECUTABLE="C:\msys64\usr\bin\pkg-config.exe"
+-DVulkan_LIBRARY="C:\VulkanSDK\1.4.309.0\Lib\vulkan-1.lib"
+-DVulkan_INCLUDE_DIR="C:\VulkanSDK\1.4.309.0\Include"
+```
+If you encounter an error that a certain file is not found you might have to add the source to you systems environment PATH variable.               
+
 ### Building for macOS & iOS ###
 If you don't have CMake installed, you can install it using [Homebrew](https://brew.sh) with the following command:
  ```bash

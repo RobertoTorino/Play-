@@ -40,3 +40,5 @@ xcuserdata
 
 # npm
 node_modules
+/.idea/
+/deps/NuGetPackages/
